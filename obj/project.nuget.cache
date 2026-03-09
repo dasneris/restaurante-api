@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "Z1rjAxEExdU=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\itzru\\Rumo\\RestauranteAPI\\RestauranteAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\itzru\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.3\\microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
+    "C:\\Users\\itzru\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
