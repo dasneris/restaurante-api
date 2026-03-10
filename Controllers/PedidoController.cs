@@ -188,4 +188,32 @@ public async Task<ActionResult> AtualizarStatus(int id, AtualizarStatusPedidoDto
         pedido.Status
     });
 }
+
+[HttpGet("finalizados")]
+public async Task<ActionResult> GetPedidosFinalizados()
+{
+    var pedidos = await _context.Pedidos
+        .Include(p => p.Itens)
+        .ThenInclude(i => i.Produto)
+        .Where(p => p.Status == StatusPedido.Entregue)
+        .Select(p => new
+        {
+            p.Id,
+            p.Mesa,
+            p.Solicitante,
+            p.Status,
+            p.CriadoEm,
+            Itens = p.Itens.Select(i => new
+            {
+                    i.ProdutoId,
+                    Produto = i.Produto != null ? i.Produto.Nome : null,
+                    Tipo = i.Produto != null ? i.Produto.Tipo.ToString() : null,
+                    i.Quantidade
+            })
+        })
+        .ToListAsync();
+
+    return Ok(pedidos);
+}
+
 }
