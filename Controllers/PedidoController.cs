@@ -101,4 +101,64 @@ public async Task<ActionResult> Create(PedidoCreateDto dto)
 
         return Ok(pedido);
     }
+    
+    [HttpGet("cozinha")]
+public async Task<ActionResult> GetPedidosCozinha()
+{
+    var pedidos = await _context.Pedidos
+        .Include(p => p.Itens)
+        .ThenInclude(i => i.Produto)
+        .ToListAsync();
+
+    var resultado = pedidos.Select(p => new
+    {
+        p.Id,
+        p.Mesa,
+        p.Solicitante,
+        p.Status,
+        p.CriadoEm,
+        Itens = p.Itens
+            .Where(i => i.Produto != null && i.Produto.Tipo == Domain.Enums.TipoProduto.Prato)
+            .Select(i => new
+            {
+                i.ProdutoId,
+                Produto = i.Produto!.Nome,
+                i.Quantidade
+            })
+    })
+    .Where(p => p.Itens.Any())
+    .ToList();
+
+    return Ok(resultado);
+}
+
+[HttpGet("copa")]
+public async Task<ActionResult> GetPedidosCopa()
+{
+    var pedidos = await _context.Pedidos
+        .Include(p => p.Itens)
+        .ThenInclude(i => i.Produto)
+        .ToListAsync();
+
+    var resultado = pedidos.Select(p => new
+    {
+        p.Id,
+        p.Mesa,
+        p.Solicitante,
+        p.Status,
+        p.CriadoEm,
+        Itens = p.Itens
+            .Where(i => i.Produto != null && i.Produto.Tipo == Domain.Enums.TipoProduto.Bebida)
+            .Select(i => new
+            {
+                i.ProdutoId,
+                Produto = i.Produto!.Nome,
+                i.Quantidade
+            })
+    })
+    .Where(p => p.Itens.Any())
+    .ToList();
+
+    return Ok(resultado);
+}
 }
