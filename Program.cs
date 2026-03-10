@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using RestauranteAPI.Infrastructure.Database;
+using RestauranteAPI.Infrastructure.Middlewares;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 
