@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RestauranteAPI.Application.DTOs;
 using RestauranteAPI.Domain.Entities;
 using RestauranteAPI.Infrastructure.Database;
-
+using RestauranteAPI.Domain.Enums;
 namespace RestauranteAPI.Controllers;
 
 [ApiController]
@@ -101,7 +101,7 @@ public async Task<ActionResult> Create(PedidoCreateDto dto)
 
         return Ok(pedido);
     }
-    
+
     [HttpGet("cozinha")]
 public async Task<ActionResult> GetPedidosCozinha()
 {
@@ -160,5 +160,32 @@ public async Task<ActionResult> GetPedidosCopa()
     .ToList();
 
     return Ok(resultado);
+}
+
+[HttpPatch("{id}/status")]
+public async Task<ActionResult> AtualizarStatus(int id, AtualizarStatusPedidoDto dto)
+{
+    var pedido = await _context.Pedidos.FindAsync(id);
+
+    if (pedido == null)
+    {
+        return NotFound("Pedido não encontrado.");
+    }
+
+    if (!Enum.IsDefined(typeof(StatusPedido), dto.Status))
+    {
+        return BadRequest("Status inválido.");
+    }
+
+    pedido.Status = dto.Status;
+
+    await _context.SaveChangesAsync();
+
+    return Ok(new
+    {
+        mensagem = "Status atualizado com sucesso.",
+        pedido.Id,
+        pedido.Status
+    });
 }
 }
